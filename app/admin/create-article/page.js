@@ -4,7 +4,6 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { createArticle } from '../actions';
-import { UploadButton } from '@/utils/uploadthing';
 import 'easymde/dist/easymde.min.css';
 import 'easymde/dist/easymde.min.css';
 
@@ -58,25 +57,14 @@ export default function CreateArticlePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.5rem' }}>
             <div>
               <label className="input-label" htmlFor="cover">Cover Image (Upload)</label>
-              {!coverImage && (
-                <div style={{ maxWidth: '320px', width: '100%', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
-                  <UploadButton
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                      setCoverImage(res[0].url);
-                    }}
-                    onUploadError={(error) => {
-                      alert(`ERROR! ${error.message}`);
-                    }}
-                  />
-                </div>
-              )}
-              {coverImage && (
-                <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <img src={coverImage} alt="Cover Preview" style={{ maxWidth: '100px', borderRadius: '8px' }} />
-                  <button type="button" onClick={() => setCoverImage('')} className="btn btn-secondary" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}>Remove</button>
-                </div>
-              )}
+              <input 
+                id="cover"
+                type="url"
+                className="input-field" 
+                value={coverImage} 
+                onChange={e => setCoverImage(e.target.value)} 
+                placeholder="https://example.com/image.jpg"
+              />
             </div>
 
             <div className="input-group" style={{ marginBottom: 0 }}>

@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateAboutDescription, createTeamMember, deleteTeamMember } from '../actions';
-import Link from 'next/link';
-import { UploadButton } from '@/utils/uploadthing';
+  import Link from 'next/link';
 
 export default function ManageAboutPage() {
   const router = useRouter();
@@ -137,25 +136,15 @@ export default function ManageAboutPage() {
           </div>
           <div className="input-group" style={{ marginTop: '1.5rem' }}>
             <label className="input-label">Profile Picture (Optional)</label>
-            {!imageUrl && (
-              <div style={{ maxWidth: '320px', width: '100%', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
-                <UploadButton
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    setImageUrl(res[0].url);
-                  }}
-                  onUploadError={(error) => {
-                    alert(`ERROR! ${error.message}`);
-                  }}
-                />
-              </div>
-            )}
-            {imageUrl && (
-              <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <img src={imageUrl} alt="Profile Preview" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }} />
-                <button type="button" onClick={() => setImageUrl('')} className="btn btn-secondary" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}>Remove</button>
-              </div>
-            )}
+            <input 
+              type="url" 
+              name="imageUrl" 
+              value={imageUrl} 
+              onChange={e => setImageUrl(e.target.value)} 
+              className="input-field" 
+              style={{ padding: '0.8rem' }} 
+              placeholder="https://example.com/profile.jpg"
+            />
           </div>
           <button type="submit" className="btn btn-primary" style={{ marginTop: '1.5rem' }} disabled={addingMember}>
             {addingMember ? 'Adding...' : 'Add Team Member'}

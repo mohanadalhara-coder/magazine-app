@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createCaricature } from '../actions';
 import Link from 'next/link';
-import { UploadDropzone } from '@/utils/uploadthing';
 
 export default function CreateCaricaturePage() {
   const router = useRouter();
@@ -71,32 +70,19 @@ export default function CreateCaricaturePage() {
         </div>
 
         <div className="input-group">
-          <label className="input-label">Upload Image</label>
-          {!imageUrl && (
-            <div style={{ maxWidth: '320px', width: '100%', margin: '0 auto', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
-              <UploadDropzone
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  setImageUrl(res[0].url);
-                  alert("Upload Completed");
-                }}
-                onUploadError={(error) => {
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
-            </div>
-          )}
+          <label className="input-label" htmlFor="imageUrl">Image URL</label>
+          <input 
+            type="url" 
+            id="imageUrl" 
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)} 
+            className="input-field" 
+            required 
+            placeholder="https://example.com/caricature.png" 
+          />
           {imageUrl && (
             <div style={{ marginTop: '0.5rem', padding: '1rem', border: '1px solid var(--glass-border)', borderRadius: '8px', textAlign: 'center' }}>
               <img src={imageUrl} alt="Uploaded preview" style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '4px' }} />
-              <button 
-                type="button" 
-                onClick={() => setImageUrl('')} 
-                className="btn btn-secondary" 
-                style={{ display: 'block', margin: '1rem auto 0' }}
-              >
-                Remove and re-upload
-              </button>
             </div>
           )}
         </div>
