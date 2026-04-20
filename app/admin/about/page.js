@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateAboutDescription, createTeamMember, deleteTeamMember } from '../actions';
 import Link from 'next/link';
+import { UploadButton } from '@/utils/uploadthing';
 
 export default function ManageAboutPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function ManageAboutPage() {
   const [savingDesc, setSavingDesc] = useState(false);
   const [addingMember, setAddingMember] = useState(false);
   const [error, setError] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
     async function fetchData() {
@@ -61,26 +63,13 @@ export default function ManageAboutPage() {
     const name = formData.get('name');
     const role = formData.get('role');
     const bio = formData.get('bio');
-    const file = formData.get('file');
 
     try {
-      let imageUrl = null;
-      if (file && file.size > 0) {
-        const uploadFormData = new FormData();
-        uploadFormData.append('file', file);
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: uploadFormData
-        });
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok) throw new Error(uploadData.error || 'Upload failed');
-        imageUrl = uploadData.url;
-      }
-
       const result = await createTeamMember({ name, role, bio, imageUrl });
       if (result.success) {
         setTeam([...team, result.item]);
         e.target.reset();
+        setImageUrl('');
       } else {
         throw new Error(result.error);
       }
@@ -148,7 +137,24 @@ export default function ManageAboutPage() {
           </div>
           <div className="input-group" style={{ marginTop: '1.5rem' }}>
             <label className="input-label">Profile Picture (Optional)</label>
-            <input type="file" name="file" accept="image/jpeg, image/png" className="input-field" style={{ padding: '0.8rem' }} />
+            {!imageUrl && (
+              <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImageUrl(res[0].url);
+                  alert("Upload Completed");
+                }}
+                onUploadError={(error) => {
+                  alert(`ERROR! ${error.message}`);
+                }}
+              />
+            )}
+            {imageUrl && (
+              <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <img src={imageUrl} alt="Profile Preview" style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }} />
+                <button type="button" onClick={() => setImageUrl('')} className="btn btn-secondary" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}>Remove</button>
+              </div>
+            )}
           </div>
           <button type="submit" className="btn btn-primary" style={{ marginTop: '1.5rem' }} disabled={addingMember}>
             {addingMember ? 'Adding...' : 'Add Team Member'}

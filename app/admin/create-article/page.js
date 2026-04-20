@@ -4,6 +4,8 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { createArticle } from '../actions';
+import { UploadButton } from '@/utils/uploadthing';
+import 'easymde/dist/easymde.min.css';
 import 'easymde/dist/easymde.min.css';
 
 const SimpleMdeReact = dynamic(() => import('react-simplemde-editor'), { ssr: false });
@@ -15,34 +17,7 @@ export default function CreateArticlePage() {
   const [coverImage, setCoverImage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
-  const router = useRouter();
-
-  const handleFileUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      
-      if (res.ok) {
-        setCoverImage(data.url);
-      } else {
-        alert(data.error || 'Upload failed');
-      }
-    } catch (err) {
-      alert('Upload failed');
-    } finally {
-      setUploading(false);
-    }
-  };
+ // Removed local upload logic in favor of Uploadthing
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,18 +58,22 @@ export default function CreateArticlePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.5rem' }}>
             <div>
               <label className="input-label" htmlFor="cover">Cover Image (Upload)</label>
-              <input 
-                type="file" 
-                id="cover"
-                accept="image/jpeg, image/png"
-                onChange={handleFileUpload}
-                className="input-field"
-                style={{ background: 'transparent' }}
-              />
-              {uploading && <small style={{ color: 'var(--accent)' }}>Uploading...</small>}
+              {!coverImage && (
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setCoverImage(res[0].url);
+                    alert("Upload Completed");
+                  }}
+                  onUploadError={(error) => {
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              )}
               {coverImage && (
-                <div style={{ marginTop: '0.5rem' }}>
+                <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <img src={coverImage} alt="Cover Preview" style={{ maxWidth: '100px', borderRadius: '8px' }} />
+                  <button type="button" onClick={() => setCoverImage('')} className="btn btn-secondary" style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}>Remove</button>
                 </div>
               )}
             </div>
