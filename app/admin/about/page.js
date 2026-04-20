@@ -138,16 +138,17 @@ export default function ManageAboutPage() {
           <div className="input-group" style={{ marginTop: '1.5rem' }}>
             <label className="input-label">Profile Picture (Optional)</label>
             {!imageUrl && (
-              <UploadButton
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  setImageUrl(res[0].url);
-                  alert("Upload Completed");
-                }}
-                onUploadError={(error) => {
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
+              <div style={{ maxWidth: '320px', width: '100%', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
+                <UploadButton
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    setImageUrl(res[0].url);
+                  }}
+                  onUploadError={(error) => {
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
+              </div>
             )}
             {imageUrl && (
               <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>

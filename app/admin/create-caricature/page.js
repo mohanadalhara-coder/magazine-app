@@ -73,16 +73,18 @@ export default function CreateCaricaturePage() {
         <div className="input-group">
           <label className="input-label">Upload Image</label>
           {!imageUrl && (
-            <UploadDropzone
-              endpoint="imageUploader"
-              onClientUploadComplete={(res) => {
-                setImageUrl(res[0].url);
-                alert("Upload Completed");
-              }}
-              onUploadError={(error) => {
-                alert(`ERROR! ${error.message}`);
-              }}
-            />
+            <div style={{ maxWidth: '320px', width: '100%', margin: '0 auto', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
+              <UploadDropzone
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  setImageUrl(res[0].url);
+                  alert("Upload Completed");
+                }}
+                onUploadError={(error) => {
+                  alert(`ERROR! ${error.message}`);
+                }}
+              />
+            </div>
           )}
           {imageUrl && (
             <div style={{ marginTop: '0.5rem', padding: '1rem', border: '1px solid var(--glass-border)', borderRadius: '8px', textAlign: 'center' }}>

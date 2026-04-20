@@ -17,8 +17,8 @@ export default function CreateArticlePage() {
   const [coverImage, setCoverImage] = useState('');
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const router = useRouter();
  // Removed local upload logic in favor of Uploadthing
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) {
@@ -59,16 +59,17 @@ export default function CreateArticlePage() {
             <div>
               <label className="input-label" htmlFor="cover">Cover Image (Upload)</label>
               {!coverImage && (
-                <UploadButton
-                  endpoint="imageUploader"
-                  onClientUploadComplete={(res) => {
-                    setCoverImage(res[0].url);
-                    alert("Upload Completed");
-                  }}
-                  onUploadError={(error) => {
-                    alert(`ERROR! ${error.message}`);
-                  }}
-                />
+                <div style={{ maxWidth: '320px', width: '100%', border: '1px dashed var(--glass-border)', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
+                  <UploadButton
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(res) => {
+                      setCoverImage(res[0].url);
+                    }}
+                    onUploadError={(error) => {
+                      alert(`ERROR! ${error.message}`);
+                    }}
+                  />
+                </div>
               )}
               {coverImage && (
                 <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
