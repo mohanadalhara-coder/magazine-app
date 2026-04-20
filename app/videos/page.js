@@ -1,17 +1,10 @@
-import { prisma } from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
-
 export const metadata = {
   title: 'مقاطع مصورة - بسراج مدرستنا خضراء',
   description: 'معرض مقاطع الفيديو',
 };
 
-export default async function VideosPage() {
-  const items = await prisma.video.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-  });
+export default function VideosPage() {
+  const items = [];
 
   return (
     <main style={{ flexGrow: 1, position: 'relative', padding: '3rem 1.5rem' }}>

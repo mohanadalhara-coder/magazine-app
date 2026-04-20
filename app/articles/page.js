@@ -1,18 +1,12 @@
 import Link from 'next/link';
-import { prisma } from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'المقالات - بسراج مدرستنا خضراء',
   description: 'جميع المقالات المنشورة في المجلة',
 };
 
-export default async function ArticlesPage() {
-  const articles = await prisma.article.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-  });
+export default function ArticlesPage() {
+  const articles = [];
 
   return (
     <main style={{ flexGrow: 1, position: 'relative', padding: '3rem 1.5rem' }}>

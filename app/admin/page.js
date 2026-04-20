@@ -1,13 +1,7 @@
-import { prisma } from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
 import Link from 'next/link';
-import { deleteArticle } from './actions';
 
-export default async function AdminDashboard() {
-  const articles = await prisma.article.findMany({
-    orderBy: { createdAt: 'desc' }
-  });
+export default function AdminDashboard() {
+  const articles = [];
 
   return (
     <div className="animate-fade-in" style={{ padding: '2rem 0' }}>

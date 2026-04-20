@@ -1,17 +1,10 @@
-import { prisma } from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
-
 export const metadata = {
   title: 'كاريكاتير - بسراج مدرستنا خضراء',
   description: 'معرض الكاريكاتير',
 };
 
-export default async function CaricaturePage() {
-  const items = await prisma.caricature.findMany({
-    where: { published: true },
-    orderBy: { createdAt: 'desc' },
-  });
+export default function CaricaturePage() {
+  const items = [];
 
   return (
     <main style={{ flexGrow: 1, position: 'relative', padding: '3rem 1.5rem' }}>
