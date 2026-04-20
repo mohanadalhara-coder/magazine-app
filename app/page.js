@@ -1,14 +1,19 @@
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export const metadata = {
   title: 'بسراج مدرستنا خضراء',
   description: 'المجلة الرسمية - بسراج مدرستنا خضراء',
 };
 
-export default function Home() {
-  // DB fetching removed to make homepage fully static and load instantly.
-  // The articles list is currently empty by default.
-  const articles = [];
+export default async function Home() {
+  const articles = await prisma.article.findMany({
+    where: { published: true },
+    orderBy: { createdAt: 'desc' },
+  });
 
   return (
     <main style={{ flexGrow: 1, position: 'relative' }}>

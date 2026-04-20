@@ -1,13 +1,18 @@
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'من نحن - بسراج مدرستنا خضراء',
   description: 'تعرف على فريق عمل مجلة بسراج مدرستنا خضراء',
 };
 
-export default function AboutPage() {
-  const descSetting = null;
-  const members = [];
+export default async function AboutPage() {
+  const [descSetting, members] = await Promise.all([
+    prisma.siteSetting.findUnique({ where: { key: 'about_description' } }),
+    prisma.teamMember.findMany({ orderBy: { createdAt: 'asc' } })
+  ]);
 
   const defaultDescription = 'بِسراج مدرستنا خضراء" هي مجلة مدرسية تهدف إلى نشر الوعي البيئي وتشجيع الطلاب على المشاركة الفعالة في حماية البيئة. نحن فريق ملتزم بتقديم محتوى هادف ومتنوع يبرز إبداعات الطلاب وإنجازاتهم.';
   const displayDescription = descSetting?.value || defaultDescription;

@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,15 +14,25 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
 
-    // Static bypass logic
-    setTimeout(() => {
-      if (username === 'admin' && password === 'siraj2026') {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+
+      if (res.ok) {
         router.push('/admin');
+        router.refresh();
       } else {
-        setError('Invalid username or password');
+        const data = await res.json();
+        setError(data.error || 'Login failed');
       }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
       setLoading(false);
-    }, 500); // Small delay for UX
+    }
   };
 
   return (
@@ -39,20 +48,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleLogin}>
           <div className="input-group">
-            <label className="input-label" htmlFor="username">Username</label>
-            <input 
-              className="input-field"
-              type="text" 
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter username"
-              required
-            />
-          </div>
-
-          <div className="input-group">
-            <label className="input-label" htmlFor="password">Password</label>
+            <label className="input-label" htmlFor="password">Master Password</label>
             <input 
               className="input-field"
               type="password" 
